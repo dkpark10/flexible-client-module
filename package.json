@@ -1,0 +1,28 @@
+{
+  "name": "httpclient",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "axios": "^1.6.8",
+    "got": "^14.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "msw": "^2.2.13",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}
