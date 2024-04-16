@@ -1,26 +1,18 @@
-import { setupWorker } from "msw/browser";
-import { http, HttpResponse } from "msw";
+import { rest } from "msw";
+import { setupServer } from "msw/node";
 import { faker } from "@faker-js/faker";
 
 const mock = (function () {
   return Array.from({ length: 20 }, () => ({
     name: faker.person.fullName(),
     email: faker.internet.email(),
-  })).reduce(
-    (acc, item, idx) => ({
-      ...acc,
-      [idx]: item,
-    }),
-    {}
-  );
+  }));
 })();
 
 export const handlers = [
-  http.get("https://example.com/post", () => {
-    return HttpResponse.json(mock, {
-      status: 200,
-    });
+  rest.get("https://example.com/content", (_ ,res, ctx) => {
+    return res(ctx.json(mock));
   }),
 ];
 
-export const worker = setupWorker(...handlers);
+export const server = setupServer(...handlers);

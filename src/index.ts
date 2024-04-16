@@ -1,16 +1,21 @@
-// (async function () {
-//   const response = await this.httpClient
-//     .get("/api/post/1")
-//     .query("len", 10)
-//     .query("len", 10);
+import { server } from "./mock";
+import httpClient from "./client";
 
-//   console.log(response);
-// })();
-
-import { worker } from "./mock";
-
-worker.start();
+server.listen();
 
 (async function () {
-  console.log('132');
+  // fetch("https://example.com/content")
+  //   .then((res) => res.json())
+  //   .then((res) => {
+  //     console.log(res);
+  //   });
+
+  const res = await httpClient
+    .setUrl("content")
+    .setMethod("get")
+    .query("start", 2)
+    .query("len", 5)
+    .retrieve();
+
+  console.log(res);
 })();

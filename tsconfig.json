@@ -1,16 +1,18 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "module": "ESNext",
     "target": "ES5",
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "outDir": "dist",
     "baseUrl": ".",
+    "rootDir": "./src",
     "sourceMap": true,
     "paths": {
       "@/": [
         "src/*"
-      ]
+      ],
+      "got": ["./node_modules/got/dist/source"]
     }
   },
   "include": [
@@ -18,5 +20,8 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "ts-node": {
+    "esm": true
+  }
 }
