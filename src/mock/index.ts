@@ -10,8 +10,10 @@ const mock = (function () {
 })();
 
 export const handlers = [
-  rest.get("https://example.com/content", (_ ,res, ctx) => {
-    return res(ctx.json(mock));
+  rest.get("https://example.com/content", (req ,res, ctx) => {
+    const start = Number(req.url.searchParams.get('start'));
+    const len = Number(req.url.searchParams.get('len'));
+    return res(ctx.json(mock.slice(start, len)));
   }),
 ];
 

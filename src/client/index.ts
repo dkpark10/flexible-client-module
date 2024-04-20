@@ -1,42 +1,45 @@
-import { AxiosClient } from "./axios";
+import { AxiosClient } from './axios';
+import type { Method, QueryParams } from '../types';
 
-type UpperMethod =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "PATCH"
-  | "DELETE"
-  | "HEAD"
-  | "OPTIONS";
-type LowerMethod = Lowercase<UpperMethod>;
-
-type Method = UpperMethod | LowerMethod;
-
-class HttpClient extends AxiosClient {
+export default class HttpClient<
+  U extends keyof QueryParams,
+  B extends Record<string, any> = any
+> extends AxiosClient {
   private url: URL;
-  
+
   private body: Record<string, any>;
 
-  constructor(private method: Method = "get") {
+  private method: Method = 'get';
+
+  constructor() {
     super();
   }
 
-  public setUrl(url: string) {
-    this.url = new URL(url);
-    return this;
+  public setUrl(url: U) {
+    try {
+      this.url = new URL(`${this.baseURL}/${url}`);
+      return this;
+    } catch (error) {
+      console.error('URL error', error);
+    }
   }
 
-  public setMethod<M extends Method = "get">(method: M) {
+  public setMethod<M extends Method = 'get'>(method: M) {
     this.method = method;
     return this;
   }
 
-  public query(key: string, value: any) {
-    this.url.searchParams.set(key, value);
+  public setQuery(
+    key: keyof QueryParams[U],
+    value: QueryParams[U][typeof key]
+  ) {
+    if (!this.url) throw new Error('url이 설정되어 있지 않습니다.');
+
+    this.url.searchParams.set(String(key), String(value));
     return this;
   }
 
-  public setBody<B extends Record<string, any>>(body: B) {
+  public setBody(body: B) {
     this.body = body;
     return this;
   }
@@ -49,5 +52,3 @@ class HttpClient extends AxiosClient {
     }).then((res) => this.response(res));
   }
 }
-
-export default new HttpClient();

@@ -1,13 +1,19 @@
 import axios, { AxiosResponse, type AxiosInstance } from "axios";
 
+const baseURL = 'https://example.com';
+
+const axiosInstance: AxiosInstance = axios.create({
+  baseURL,
+  timeout: 10_000,
+});
+
 export abstract class AxiosClient {
+  protected baseURL = baseURL;
+
   protected instance: AxiosInstance;
 
   constructor() {
-    this.instance = axios.create({
-      baseURL: "https://example.com",
-      timeout: 10_000,
-    });
+    this.instance = axiosInstance;
   }
 
   protected response(response: AxiosResponse) {
