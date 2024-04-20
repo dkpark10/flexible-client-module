@@ -10,11 +10,14 @@ server.listen();
   //     console.log(res);
   //   });
 
-  const res = await new httpClient<'content'>()
+  const res = await new httpClient<
+    'content',
+    Array<{ name: string; email: string }>
+  >()
     .setUrl('content')
     .setQuery('start', 2)
     .setQuery('len', 5)
     .retrieve();
 
-  console.log(res);
+  console.log(res.data);
 })();

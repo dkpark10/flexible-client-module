@@ -1,21 +1,24 @@
-import { AxiosClient } from './axios';
+import { Client, type Response } from './client';
 import type { Method, QueryParams } from '../types';
 
 export default class HttpClient<
-  U extends keyof QueryParams,
-  B extends Record<string, any> = any
-> extends AxiosClient {
+  Url extends keyof QueryParams,
+  Data extends Record<string, any> = any,
+  Body extends Record<string, any> = any,
+> extends Client {
   private url: URL;
 
-  private body: Record<string, any>;
+  private body: Body;
 
   private method: Method = 'get';
+  
+  private headers: Record<string, any> = {};
 
   constructor() {
     super();
   }
 
-  public setUrl(url: U) {
+  public setUrl(url: Url) {
     try {
       this.url = new URL(`${this.baseURL}/${url}`);
       return this;
@@ -30,8 +33,8 @@ export default class HttpClient<
   }
 
   public setQuery(
-    key: keyof QueryParams[U],
-    value: QueryParams[U][typeof key]
+    key: keyof QueryParams[Url],
+    value: QueryParams[Url][typeof key]
   ) {
     if (!this.url) throw new Error('url이 설정되어 있지 않습니다.');
 
@@ -39,16 +42,18 @@ export default class HttpClient<
     return this;
   }
 
-  public setBody(body: B) {
+  public setBody(body: Body) {
     this.body = body;
     return this;
   }
 
-  public async retrieve<T>(): Promise<{ status: number; data: T }> {
-    return await this.instance<T>({
+  public async retrieve(): Promise<Response<Data>> {
+    const reqData = this.transform<Body>({
+      url: this.url,
       method: this.method,
-      url: this.url.href,
-      data: this.body,
-    }).then((res) => this.response(res));
+      body: this.body,
+      headers: this.headers,
+    });
+    return await this.instance<Data>(reqData).then((res) => this.response(res));
   }
 }
