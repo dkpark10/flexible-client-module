@@ -1,9 +1,9 @@
 import { Client, type Response } from './client';
-import type { Method, QueryParams } from '../types';
+import type { Method, QueryParams, EndPoint } from '../types';
 
-export default class HttpClient<
-  Url extends keyof QueryParams,
-  Data extends Record<string, any> = any,
+export default class ApiClient<
+  Url extends EndPoint,
+  Data extends any = any,
   Body extends Record<string, any> = any,
 > extends Client {
   private url: URL;
@@ -33,8 +33,8 @@ export default class HttpClient<
   }
 
   public setQuery(
-    key: keyof QueryParams[Url],
-    value: QueryParams[Url][typeof key]
+    key: keyof QueryParams<Url>[Url],
+    value: QueryParams<Url>[Url][typeof key]
   ) {
     if (!this.url) throw new Error('url이 설정되어 있지 않습니다.');
 

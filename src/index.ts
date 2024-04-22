@@ -1,5 +1,5 @@
 import { server } from './mock';
-import httpClient from './client';
+import ApiClient from './client';
 
 server.listen();
 
@@ -10,7 +10,7 @@ server.listen();
   //     console.log(res);
   //   });
 
-  const res = await new httpClient<
+  const res = await new ApiClient<
     'content',
     Array<{ name: string; email: string }>
   >()
@@ -20,4 +20,11 @@ server.listen();
     .retrieve();
 
   console.log(res.data);
+
+  const res2 = await new ApiClient<'slug/2', string>()
+    .setUrl('slug/2')
+    .setQuery('mode', 5)
+    .retrieve();
+
+  console.log(res2.data);
 })();
