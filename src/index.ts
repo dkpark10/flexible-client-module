@@ -17,6 +17,7 @@ server.listen();
     .setUrl('content')
     .setQuery('start', 2)
     .setQuery('len', 5)
+    .setQuery('order', 'asce')
     .retrieve();
 
   console.log(res.data);

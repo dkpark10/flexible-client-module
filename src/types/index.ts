@@ -18,6 +18,7 @@ export type QueryParams<E extends EndPoint> = {
     ? {
         start: number;
         len: number;
+        order: 'desc' | 'asce';
       }
     : E extends 'search'
     ? {
