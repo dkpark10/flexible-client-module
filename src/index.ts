@@ -31,7 +31,7 @@ server.listen();
 
   const response = await new ApiClient<'search', string>()
   .setUrl('search')
-  .setQuery('order', 'ascend')
+  .setQuery('order', 'asce')
   // .setQuery('invalidKey', 0)
   .setQuery('end', 10)
   .setQuery('keyword', 'food')

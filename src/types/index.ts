@@ -22,7 +22,7 @@ export type QueryParams = {
       }
     : Key extends 'search'
     ? {
-        order: 'ascend' | 'descend';
+        order: 'desc' | 'asce';
         keyword: string;
         start: number;
         end: number;

@@ -9,7 +9,7 @@
     "rootDir": "./src",
     "sourceMap": true,
     "paths": {
-      "@/": [
+      "@/*": [
         "src/*"
       ],
       "got": ["./node_modules/got/dist/source"]
