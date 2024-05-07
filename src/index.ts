@@ -28,4 +28,12 @@ server.listen();
     .retrieve();
 
   console.log(res2.data);
+
+  const response = await new ApiClient<'search', string>()
+  .setUrl('search')
+  .setQuery('order', 'ascend')
+  // .setQuery('invalidKey', 0)
+  .setQuery('end', 10)
+  .setQuery('keyword', 'food')
+  .retrieve();
 })();

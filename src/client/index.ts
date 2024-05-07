@@ -32,9 +32,9 @@ export default class ApiClient<
     return this;
   }
 
-  public setQuery<K extends keyof QueryParams<Url>[Url]>(
+  public setQuery<K extends keyof QueryParams[Url]>(
     key: K,
-    value: QueryParams<Url>[Url][typeof key]
+    value: QueryParams[Url][typeof key]
   ) {
     if (!this.url) throw new Error('url이 설정되어 있지 않습니다.');
 
