@@ -5,8 +5,9 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "ts-node --experimental-specifier-resolution=node ./src/index.ts",
-    "test": "vitest --typecheck"
+    "dev": "ts-node --experimental-specifier-resolution=node ./src/index.ts",
+    "test": "vitest --typecheck",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
