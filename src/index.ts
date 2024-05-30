@@ -1,32 +1,23 @@
 import { server } from './mock';
-import ApiClient from './client';
+import { client } from './client';
 import { all } from './helloworld';
 
 server.listen();
 
 (async function () {
-  fetch("https://example.com/content")
+  fetch('https://example.com/content')
     .then((res) => res.json())
     .then((res) => {
       console.log(res);
     });
 
-  const res = await new ApiClient<
-    'content',
-    Array<{ name: string; email: string }>
-  >()
-    .setUrl('content')
-    .setQuery('start', 2)
-    .setQuery('len', 5)
-    .setQuery('order', 'desc')
-    .retrieve();
+  const res = await client
+    .setUrl('content', { start: 2, len: 5, order: 'desc' })
+    .retrieve<Array<{ name: string; email: string }>>();
 
   console.log(res.data);
 
-  const res2 = await new ApiClient<'slug/2', string>()
-    .setUrl('slug/2')
-    .setQuery('mode', 5)
-    .retrieve();
+  const res2 = await client.setUrl('slug/2', { mode: 5 }).retrieve<string>();
 
   console.log(res2.data);
 })();

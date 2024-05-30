@@ -1,26 +1,32 @@
 import { Client, type Response } from './client';
 import type { Method, QueryParams, EndPoint } from '../types';
 
-export default class ApiClient<
-  Url extends EndPoint,
-  Data extends any = any,
-  Body extends Record<string, any> = any,
-> extends Client {
+class ApiClient extends Client {
   private url: URL;
 
-  private body: Body;
+  private body: any;
 
   private method: Method = 'get';
-  
+
   private headers: Record<string, any> = {};
 
   constructor() {
     super();
   }
 
-  public setUrl(url: Url) {
+  public setUrl<Url extends EndPoint, Key extends keyof QueryParams[Url]>(
+    url: Url,
+    queryParams?: {
+      [K in Key]: QueryParams[Url][Key];
+    }
+  ) {
     try {
       this.url = new URL(`${this.baseURL}/${url}`);
+
+      Object.entries(queryParams).forEach(([key, value]) => {
+        this.url.searchParams.set(String(key), String(value));
+      });
+
       return this;
     } catch (error) {
       console.error('URL error', error);
@@ -32,22 +38,12 @@ export default class ApiClient<
     return this;
   }
 
-  public setQuery<K extends keyof QueryParams[Url]>(
-    key: K,
-    value: QueryParams[Url][typeof key]
-  ) {
-    if (!this.url) throw new Error('url이 설정되어 있지 않습니다.');
-
-    this.url.searchParams.set(String(key), String(value));
-    return this;
-  }
-
-  public setBody(body: Body) {
+  public setBody<Body>(body: Body) {
     this.body = body;
     return this;
   }
 
-  public async retrieve(): Promise<Response<Data>> {
+  public async retrieve<Data>(): Promise<Response<Data>> {
     const reqData = this.transform<Body>({
       url: this.url,
       method: this.method,
@@ -57,3 +53,5 @@ export default class ApiClient<
     return await this.instance<Data>(reqData).then((res) => this.response(res));
   }
 }
+
+export const client = new ApiClient();
