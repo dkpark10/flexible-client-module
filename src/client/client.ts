@@ -33,6 +33,8 @@ export interface Response<D> {
   data: D;
 }
 
+export type CommonConfig = AxiosRequestConfig;
+
 export abstract class Client {
   protected baseURL = baseURL;
 

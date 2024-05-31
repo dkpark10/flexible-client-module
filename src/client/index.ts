@@ -1,5 +1,5 @@
-import { Client, type Response } from './client';
-import type { Method, QueryParams, EndPoint } from '../types';
+import { Client, type Response, type CommonConfig } from './client';
+import type { Method, QueryParams, EndPoint, RequestBody } from '../types';
 
 class ApiClient extends Client {
   private url: URL;
@@ -8,18 +8,29 @@ class ApiClient extends Client {
 
   private method: Method = 'get';
 
-  private headers: Record<string, any> = {};
+  private config: CommonConfig;
 
   constructor() {
     super();
   }
 
-  public setUrl<Url extends EndPoint, Key extends keyof QueryParams[Url]>(
-    url: Url,
+  public setRequestInfo<
+    Url extends EndPoint,
+    QueryStringKey extends keyof QueryParams[Url],
+    BodyKey extends keyof RequestBody[Url]
+  >({
+    url,
+    queryParams,
+    body,
+  }: {
+    url: Url;
     queryParams?: {
-      [K in Key]: QueryParams[Url][Key];
-    }
-  ) {
+      [K in QueryStringKey]: QueryParams[Url][QueryStringKey];
+    };
+    body?: {
+      [K in BodyKey]: RequestBody[Url][BodyKey];
+    };
+  }) {
     try {
       this.url = new URL(`${this.baseURL}/${url}`);
 
@@ -27,6 +38,7 @@ class ApiClient extends Client {
         this.url.searchParams.set(String(key), String(value));
       });
 
+      this.body = body;
       return this;
     } catch (error) {
       console.error('URL error', error);
@@ -38,8 +50,8 @@ class ApiClient extends Client {
     return this;
   }
 
-  public setBody<Body>(body: Body) {
-    this.body = body;
+  public setConfig(config: CommonConfig) {
+    this.config = config;
     return this;
   }
 
@@ -48,7 +60,7 @@ class ApiClient extends Client {
       url: this.url,
       method: this.method,
       body: this.body,
-      headers: this.headers,
+      headers: this.config,
     });
     return await this.instance<Data>(reqData).then((res) => this.response(res));
   }

@@ -35,3 +35,15 @@ export type QueryParams = {
         [key: string]: any;
       };
 };
+
+export type RequestBody = {
+  [Key in EndPoint]: Key extends 'content'
+    ? {
+        apiKey: string;
+      }
+    : Key extends `slug/${number}`
+    ? {
+        id: number;
+      }
+    : never;
+};
